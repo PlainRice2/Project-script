@@ -7138,20 +7138,20 @@ end
 
 -- Discord server for key link
 local DISCORD_KEY_SERVER = "discord.gg/rmV368F8"
-    playeresp = "https://codeberg.org/fuse/sma/raw/branch/main/lmn",
-    aiesp = "https://codeberg.org/fuse/sma/raw/branch/main/ea",
-    aichams = "https://pastebin.com/raw/Vgx7G7S4",
-    playeraimbot = "https://pastebin.com/raw/VE0HwMZW",
-    playerchams = "https://pastebin.com/raw/Hqgzpb1n",
-    vmeditor = "https://pastebin.com/raw/hGB7WVax",
-    norecoil = "https://pastebin.com/raw/Vqd8wkP6",
-    bhop = "https://pastebin.com/raw/vsgdNSSH",
-    grenadeesp = 'https://pastebin.com/raw/E5NpSz4h',
-    landminedelete = 'https://pastebin.com/raw/1X2HWraU',
-    mineEsp = 'https://pastebin.com/raw/GJem6ti2',
-    silentaim = 'https://codeberg.org/fuse/sma/raw/branch/main/sl',
-    corpseesp = 'https://pastebin.com/raw/g0T31sYd',
-    invchecker = 'https://pastebin.com/raw/VBc0Gx4G',
+    -- playeresp = "https://codeberg.org/fuse/sma/raw/branch/main/lmn", -- DISABLED - broken
+    -- aiesp = "https://codeberg.org/fuse/sma/raw/branch/main/ea", -- DISABLED - broken
+    -- aichams = "https://pastebin.com/raw/Vgx7G7S4", -- DISABLED - broken
+    -- playeraimbot = "https://pastebin.com/raw/VE0HwMZW", -- DISABLED - broken
+    -- playerchams = "https://pastebin.com/raw/Hqgzpb1n", -- DISABLED - broken
+    -- vmeditor = "https://pastebin.com/raw/hGB7WVax", -- DISABLED - broken
+    -- norecoil = "https://pastebin.com/raw/Vqd8wkP6", -- DISABLED - broken
+    -- bhop = "https://pastebin.com/raw/vsgdNSSH", -- DISABLED - broken
+    -- grenadeesp = 'https://pastebin.com/raw/E5NpSz4h', -- DISABLED - broken
+    -- landminedelete = 'https://pastebin.com/raw/1X2HWraU', -- DISABLED - broken
+    -- mineEsp = 'https://pastebin.com/raw/GJem6ti2', -- DISABLED - broken
+    -- silentaim = 'https://codeberg.org/fuse/sma/raw/branch/main/sl', -- DISABLED - broken
+    -- corpseesp = 'https://pastebin.com/raw/g0T31sYd', -- DISABLED - broken
+    -- invchecker = 'https://pastebin.com/raw/VBc0Gx4G', -- DISABLED - broken
 }
 
 local function loadScripts()
