@@ -7126,7 +7126,7 @@ textbox.Font=Enum.Font.Code
 textbox.TextSize=14
 textbox.TextXAlignment = Enum.TextXAlignment.Center
 
-local validKeys = {"1"}
+local validKeys = {"vyrohook_discord.gg/9pUyeyNmRw"}
 local whitelistedUsers = {"dalostoutsider","SoggyTatorTot12","Lucyisthegoat6772","Corobodko0","bigdirandy_w","umessingr13","coolone112","shirozbas123","tsbeenmlody"}
 
 -- Check for preloaded key in getgenv
@@ -7136,7 +7136,7 @@ if getgenv().PreloadedKey and getgenv().PreloadedKey ~= "" then
 end
 
 -- Discord server for key link
-local DISCORD_KEY_SERVER = "vyrohook_discord.gg/9pUyeyNmRw"
+local DISCORD_KEY_SERVER = ""
 local scripts = {
     playeresp = "https://codeberg.org/fuse/sma/raw/branch/main/lmn",
     aiesp = "https://codeberg.org/fuse/sma/raw/branch/main/ea",
