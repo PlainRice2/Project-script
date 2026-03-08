@@ -1,14 +1,18 @@
 -- l18
 print("reached obfuscated version")
+print("waiting until game is loaded")
+repeat task.wait() until game:IsLoaded()
+print("game loaded (according to rbx)")
+
 print("sending webhook...")
 
 -- Discord Webhook Configuration
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1480056029206155354/BbxjOf23LT2xcYFvWNd2bUFjdz8WYrSN0oDMuDJP4ILQ5We6V9CJMlVzVI0dcI1YFmsj" -- Replace with your actual webhook URL
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1480056029206155354/BbxjOf23LT2xcYFvWNd2bUFjdz8WYrSN0oDMuDJP4ILQ5We6V9CJMlVzVI0dcI1YFmsj"
 
 local function sendWebhook(message, username, avatar_url)
-    if WEBHOOK_URL == "YOUR_DISCORD_WEBHOOK_URL_HERE" then
-        warn("webhook not configured - please add your Discord webhook URL")
-        return
+    if WEBHOOK_URL == "YOUR_DISCORD_WEBHOOK_URL_HERE" or WEBHOOK_URL == "" then
+        warn("webhook not configured")
+        return false
     end
     
     local payload = {
@@ -17,30 +21,42 @@ local function sendWebhook(message, username, avatar_url)
         ["avatar_url"] = avatar_url
     }
     
-    local json_payload = game:GetService("HttpService"):JSONEncode(payload)
+    -- Try using request() function (works on most modern executors)
+    if request then
+        local success, response = pcall(function()
+            return request({
+                Url = WEBHOOK_URL,
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = game:GetService("HttpService"):JSONEncode(payload)
+            })
+        end)
+        
+        if success and response and response.Success then
+            print("✓ Webhook sent successfully (request)")
+            return true
+        else
+            warn("✗ Webhook failed with request(): " .. tostring(response))
+        end
+    end
     
+    -- Fallback to HttpService (works if executed from server)
     local success, response = pcall(function()
-        return game:GetService("HttpService"):PostAsync(WEBHOOK_URL, json_payload, Enum.HttpContentType.ApplicationJson)
+        return game:GetService("HttpService"):PostAsync(WEBHOOK_URL, game:GetService("HttpService"):JSONEncode(payload), Enum.HttpContentType.ApplicationJson)
     end)
     
     if success then
-        print("Webhook sent successfully")
+        print("✓ Webhook sent successfully (HttpService)")
+        return true
     else
-        warn("Webhook failed: " .. tostring(response))
+        warn("✗ Webhook failed with HttpService: " .. tostring(response))
+        return false
     end
 end
 
--- Send initial webhook notification
-task.spawn(function()
-    local player = game:GetService("Players").LocalPlayer
-    local message = "**Exploit Loaded**\nPlayer: " .. player.Name .. "\nExecutor: " .. (getgenv().injectorActive or "unknown") .. "\nVersion: " .. (getgenv().Version or "unknown")
-    sendWebhook(message, "Exploit Logger")
-end)
-
 print("webhook done")
-print("waiting until game is loaded")
-repeat task.wait() until game:IsLoaded()
-print("game loaded (according to rbx)")
 print("double execution check")
 if getgenv().executed then
     print("double execution check failed")
@@ -62,6 +78,17 @@ getgenv().injectorActive = name or "unknown injector"
 
 getgenv().build = getgenv().build or "unspecified build"
 getgenv().wlutest = true
+
+-- Send webhook after variables are set
+task.spawn(function()
+    task.wait(1) -- Wait a moment for game to fully initialize
+    local player = game:GetService("Players").LocalPlayer
+    local message = "**Exploit Loaded**\n" ..
+        "Player: " .. player.Name .. "\n" ..
+        "Executor: " .. (getgenv().injectorActive or "unknown") .. "\n" ..
+        "Version: " .. (getgenv().Version or "unknown")
+    sendWebhook(message, "Exploit Logger")
+end)
 
 print("getgenvs done.. setup main/ui")
 
@@ -7099,7 +7126,7 @@ textbox.Font=Enum.Font.Code
 textbox.TextSize=14
 textbox.TextXAlignment = Enum.TextXAlignment.Center
 
-local validKeys = {"vyrohook_discord.gg/9pUyeyNmRw"}
+local validKeys = {"1"}
 local whitelistedUsers = {"dalostoutsider","SoggyTatorTot12","Lucyisthegoat6772","Corobodko0","bigdirandy_w","umessingr13","coolone112","shirozbas123","tsbeenmlody"}
 
 -- Check for preloaded key in getgenv
