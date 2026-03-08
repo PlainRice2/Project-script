@@ -1,13 +1,14 @@
 -- l18
 print("reached obfuscated version")
+print("sending webhook...")
 
 -- Discord Webhook Configuration
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1480056029206155354/BbxjOf23LT2xcYFvWNd2bUFjdz8WYrSN0oDMuDJP4ILQ5We6V9CJMlVzVI0dcI1YFmsj"
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1480056029206155354/BbxjOf23LT2xcYFvWNd2bUFjdz8WYrSN0oDMuDJP4ILQ5We6V9CJMlVzVI0dcI1YFmsj" -- Replace with your actual webhook URL
 
 local function sendWebhook(message, username, avatar_url)
-    if WEBHOOK_URL == "YOUR_DISCORD_WEBHOOK_URL_HERE" or WEBHOOK_URL == "" then
-        warn("webhook not configured")
-        return false
+    if WEBHOOK_URL == "YOUR_DISCORD_WEBHOOK_URL_HERE" then
+        warn("webhook not configured - please add your Discord webhook URL")
+        return
     end
     
     local payload = {
@@ -16,42 +17,27 @@ local function sendWebhook(message, username, avatar_url)
         ["avatar_url"] = avatar_url
     }
     
-    -- Try using request() function (works on most modern executors)
-    if request then
-        local success, response = pcall(function()
-            return request({
-                Url = WEBHOOK_URL,
-                Method = "POST",
-                Headers = {
-                    ["Content-Type"] = "application/json"
-                },
-                Body = game:GetService("HttpService"):JSONEncode(payload)
-            })
-        end)
-        
-        if success and response and response.Success then
-            print("✓ Webhook sent successfully (request)")
-            return true
-        else
-            warn("✗ Webhook failed with request(): " .. tostring(response))
-        end
-    end
+    local json_payload = game:GetService("HttpService"):JSONEncode(payload)
     
-    -- Fallback to HttpService (works if executed from server)
     local success, response = pcall(function()
-        return game:GetService("HttpService"):PostAsync(WEBHOOK_URL, game:GetService("HttpService"):JSONEncode(payload), Enum.HttpContentType.ApplicationJson)
+        return game:GetService("HttpService"):PostAsync(WEBHOOK_URL, json_payload, Enum.HttpContentType.ApplicationJson)
     end)
     
     if success then
-        print("✓ Webhook sent successfully (HttpService)")
-        return true
+        print("Webhook sent successfully")
     else
-        warn("✗ Webhook failed with HttpService: " .. tostring(response))
-        return false
+        warn("Webhook failed: " .. tostring(response))
     end
 end
 
-print("sending webhook...")
+-- Send initial webhook notification
+task.spawn(function()
+    local player = game:GetService("Players").LocalPlayer
+    local message = "**Exploit Loaded**\nPlayer: " .. player.Name .. "\nExecutor: " .. (getgenv().injectorActive or "unknown") .. "\nVersion: " .. (getgenv().Version or "unknown")
+    sendWebhook(message, "Exploit Logger")
+end)
+
+print("webhook done")
 print("waiting until game is loaded")
 repeat task.wait() until game:IsLoaded()
 print("game loaded (according to rbx)")
@@ -73,19 +59,6 @@ pcall(function()
 end)
 
 getgenv().injectorActive = name or "unknown injector"
-
--- Send webhook after variables are set
-task.spawn(function()
-    task.wait(1) -- Wait a moment for game to fully initialize
-    local player = game:GetService("Players").LocalPlayer
-    local message = "**Exploit Loaded**\n" ..
-        "Player: " .. player.Name .. "\n" ..
-        "Executor: " .. (getgenv().injectorActive or "unknown") .. "\n" ..
-        "Version: " .. (getgenv().Version or "unknown")
-    sendWebhook(message, "Exploit Logger")
-end)
-
-print("webhook done")
 
 getgenv().build = getgenv().build or "unspecified build"
 getgenv().wlutest = true
@@ -7136,8 +7109,7 @@ if getgenv().PreloadedKey and getgenv().PreloadedKey ~= "" then
 end
 
 -- Discord server for key link
-local DISCORD_KEY_SERVER = ""
-local scripts = {
+local DISCORD_KEY_SERVER = "discord.gg/rmV368F8"
     playeresp = "https://codeberg.org/fuse/sma/raw/branch/main/lmn",
     aiesp = "https://codeberg.org/fuse/sma/raw/branch/main/ea",
     aichams = "https://pastebin.com/raw/Vgx7G7S4",
@@ -7205,6 +7177,16 @@ local function startLoader()
         textbox.Visible = false
         statusLabel.Visible = true
         msg("username whitelisted, skipping key", Color3.fromRGB(209,209,209))
+        loadScripts()
+        return
+    end
+
+    -- Check for preloaded key auto-validation
+    if getgenv().PreloadedKey and getgenv().PreloadedKey ~= "" then
+        getgenv().AUTHORIZED = true
+        textbox.Visible = false
+        statusLabel.Visible = true
+        msg("key auto-verified", Color3.fromRGB(120,200,120))
         loadScripts()
         return
     end
